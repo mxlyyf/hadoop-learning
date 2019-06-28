@@ -8,6 +8,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.util.UUID;
@@ -28,6 +29,9 @@ public class MyDriver {
 
         // 2 设置jar加载路径
         job.setJarByClass(MyDriver.class);
+
+        //设置InputFormat
+        //job.setInputFormatClass(TextInputFormat.class);
 
         // 3 设置map和reduce类
         job.setMapperClass(FlowBeanMapper.class);
