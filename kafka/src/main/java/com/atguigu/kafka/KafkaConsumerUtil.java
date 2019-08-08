@@ -16,20 +16,19 @@ public class KafkaConsumerUtil {
         props.put("group.id", "test");
         props.put("enable.auto.commit", "false");//是否自动提交offset
         //props.put("auto.commit.interval.ms", "1000");//自动提交offset的时间间隔
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList(KafkaProducer.KAFKA_TOPIC_NAME));
+        consumer.subscribe(Arrays.asList(KafkaProducertTest.KAFKA_TOPIC_NAME));
     }
 
-    public static void consume01() {
+    //消费record，手动异步提交offset
+    public static void consumeMessage01() {
         while (true) {
-
             ConsumerRecords<String, String> records = consumer.poll(100);
-
-            for (ConsumerRecord<String, String> record : records)
-
+            for (ConsumerRecord<String, String> record : records) {
                 System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+            }
 
             //异步提交
             consumer.commitAsync(new OffsetCommitCallback() {
@@ -40,6 +39,17 @@ public class KafkaConsumerUtil {
                     }
                 }
             });
+        }
+    }
+
+    //消费record，手动同步提交offset
+    public static void consumeMessage02() {
+        while (true) {
+            ConsumerRecords<String, String> records = consumer.poll(100);
+            for (ConsumerRecord<String, String> record : records) {
+                System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+            }
+            consumer.commitSync();
         }
     }
 
