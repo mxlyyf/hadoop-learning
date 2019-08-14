@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>wordcount</module>
+        <module>mapreduce</module>
         <module>kafka</module>
         <module>kylin</module>
         <module>logGen</module>
